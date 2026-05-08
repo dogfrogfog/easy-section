@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Wand2, Camera, FileJson, GitPullRequest } from "lucide-react";
+import { Wand2, Camera, FileJson, GitPullRequest, Zap } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import {
   CONTRIBUTE_PROMPT,
@@ -25,6 +25,25 @@ export default function ContributePage() {
           and let it open the PR for you.
         </p>
       </header>
+
+      <section className="rounded-lg border border-[var(--primary)]/40 bg-[var(--accent)]/30 p-4 sm:p-5 flex flex-col sm:flex-row gap-3 sm:items-center">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[var(--primary)] text-[var(--primary-foreground)]">
+          <Zap className="h-4 w-4" />
+        </div>
+        <div className="flex-1 text-sm">
+          <p className="font-medium text-[var(--foreground)]">
+            Recommended: run this in Claude Code with Haiku 4.5
+          </p>
+          <p className="text-[var(--muted-foreground)] mt-0.5">
+            The task is mechanical (extract code, reshape JSON, run shell
+            commands), so Haiku is fast enough and accurate enough. Switch with{" "}
+            <code className="font-mono text-xs">/model haiku</code> in Claude
+            Code, or <code className="font-mono text-xs">--model claude-haiku-4-5</code> on
+            the CLI. Make sure <code className="font-mono text-xs">gh auth status</code> is
+            green before you start.
+          </p>
+        </div>
+      </section>
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Step
