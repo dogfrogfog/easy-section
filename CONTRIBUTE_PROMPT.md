@@ -1,0 +1,134 @@
+You are helping me contribute a CMS section I just built to the easy-section gallery (https://github.com/dogfrogfog/easy-section). Drive the whole flow end-to-end: extract → write JSON → screenshot → open PR with the GitHub CLI. Ask only when truly blocked.
+
+# 1. Find the section in this project
+
+Look in this repository for the section component I most recently worked on. If multiple are plausible, list them and ask me to pick. For the chosen section, gather:
+
+1. **Reference layout** — the source file of the section component (TSX/JSX/Vue/Astro/Svelte). Include the prop type and the JSX. Trim wrappers and imports that aren't part of the section itself; keep the result self-contained and readable.
+2. **Schema** — the CMS field definitions. Search likely locations:
+   - Payload: `payload.config.ts`, `collections/`, `blocks/`, `fields/`
+   - Sanity: `sanity.config.*`, `schemas/`, `schemaTypes/`
+   - Storyblok: `storyblok/components/`
+   - Contentful / Strapi / Directus: their respective config dirs
+   Convert the schema into the simple JSON shape below. Preserve nested groups exactly. Drop CMS-specific options that don't have an analogue (icons, custom validators, conditional logic) — they belong in the original CMS, not in the gallery's reference schema.
+3. **Screenshot** — look in `docs/`, `screenshots/`, `public/` for an existing one. If none exists, start the dev server, open the page using this section, take a screenshot at ~1600×900 (PNG or SVG). Save it to a temp path you'll reference below.
+4. **Metadata** — propose:
+   - `name` (Title Case)
+   - `description` — one or two sentences
+   - `tags` — free-form, lowercase
+   - `categories` — e.g. `landing`, `pricing`, `blog`, `product`
+   - `effects` — animations / scroll behaviours / interactive bits
+   - `cmsTarget` — `payload` | `sanity` | `storyblok` | `contentful` | `strapi` | `directus` | `wordpress`
+
+# 2. JSON shape
+
+Each section is an object like this. The data file is a JSON **array** of one or more such objects.
+
+```jsonc
+{
+  "name": "Hero Banner with Parallax",
+  "description": "Full-width hero with a parallax background and animated heading.",
+  "preview": "previews/2026-05-08_acme-store/hero-banner.png",
+  "tags": ["hero", "banner", "parallax"],
+  "categories": ["landing"],
+  "effects": ["parallax-scroll", "fade-in"],
+  "cmsTarget": "payload",
+  "layout": {
+    "language": "tsx",
+    "code": "...the cleaned section source..."
+  },
+  "schema": {
+    "fields": [
+      { "name": "title", "type": "string", "title": "Title", "required": true },
+      {
+        "name": "cta",
+        "type": "group",
+        "title": "Call to action",
+        "fields": [
+          { "name": "label", "type": "string" },
+          { "name": "href", "type": "url" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Field types you can use: `string`, `text`, `number`, `boolean`, `url`, `image`, `richText`, `reference`, `select` (+ `options: string[]`), `array` (+ `of: SchemaField[]`), `group` (+ `fields: SchemaField[]`), `object` (+ `fields: SchemaField[]`).
+
+Do **not** include `project` or `addedAt` in the JSON — those are derived from the filename.
+
+# 3. Open the PR with the GitHub CLI
+
+Run this from any directory. Replace `<project-slug>` with a short, lowercase, dash-separated slug for the project you took the section from (e.g. `acme-store`). Replace `<filename>` with a slug for each section's screenshot.
+
+Prereqs: `gh auth status` must show you logged in. If it doesn't, run `gh auth login` and finish that first.
+
+```bash
+set -euo pipefail
+
+DATE="$(date +%F)"                     # YYYY-MM-DD
+PROJECT="<project-slug>"               # lowercase, dashes only
+BRANCH="data/$PROJECT-$DATE"
+
+TMP="$(mktemp -d)"
+cd "$TMP"
+
+# Fork (or reuse your fork) and clone it. "origin" points at your fork,
+# "upstream" at dogfrogfog/easy-section. This works whether you have push
+# access or not — collaborators just end up with a personal fork too,
+# which is fine.
+gh repo fork dogfrogfog/easy-section --clone --remote
+cd easy-section
+
+# Branch from the latest upstream main, not your fork's potentially stale main.
+git fetch upstream
+git checkout -b "$BRANCH" upstream/main
+
+mkdir -p "public/previews/${DATE}_${PROJECT}"
+cp /path/to/screenshot.png "public/previews/${DATE}_${PROJECT}/<filename>.png"
+
+# Write the JSON file. It must be an ARRAY of section objects.
+cat > "data-source/${DATE}_${PROJECT}_sections.json" <<'JSON'
+[
+  {
+    "name": "...",
+    "description": "...",
+    "preview": "previews/<DATE>_<PROJECT>/<filename>.png",
+    "tags": ["..."],
+    "categories": ["..."],
+    "effects": ["..."],
+    "cmsTarget": "payload",
+    "layout": { "language": "tsx", "code": "..." },
+    "schema": { "fields": [ /* ... */ ] }
+  }
+]
+JSON
+
+# Validate locally — the build will fail loudly on a malformed file.
+pnpm install
+pnpm build
+
+git add public/previews data-source
+git commit -m "data: $PROJECT sections"
+git push -u origin "$BRANCH"
+
+# Open the PR against the upstream repo from your fork's branch.
+gh pr create \
+  --repo dogfrogfog/easy-section \
+  --base main \
+  --head "$(gh api user -q .login):$BRANCH" \
+  --title "data: add $PROJECT sections" \
+  --body "Adds $PROJECT sections to the gallery."
+```
+
+# 4. Hard rules
+
+- Filename **must** match `^\d{4}-\d{2}-\d{2}_[a-z0-9-]+_sections\.json$`.
+- The data file is a JSON **array** at the top level — even for a single section.
+- The `preview` path is relative to `public/` (no leading slash).
+- Do not paste API keys, internal URLs, real customer copy, or anything proprietary into `layout.code` or the schema. Sanitize identifiers if needed.
+- If `pnpm build` fails, **fix the JSON before pushing** — don't push a broken file and let CI catch it.
+- One file per project per upload. If you have several sections from the same project, put them all in the same array.
+
+When the PR is open, reply with the PR URL.
