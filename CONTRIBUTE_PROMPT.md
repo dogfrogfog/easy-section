@@ -1,66 +1,88 @@
-You are helping me contribute a CMS section I just built to the easy-section gallery (https://github.com/dogfrogfog/easy-section). Drive the whole flow end-to-end: extract → write JSON → screenshot → open PR with the GitHub CLI. Ask only when truly blocked.
+You are helping me contribute one or more CMS sections I just built to the easy-section gallery (https://github.com/dogfrogfog/easy-section). Drive the whole flow end-to-end. Ask only when truly blocked.
 
-# 1. Find the section in this project
+The flow is:
+1. Identify candidate sections (cheap scan, no big reads).
+2. For each section, dispatch a Task subagent that reads its files and returns the JSON object — in parallel. This keeps the main context small and turnaround fast.
+3. Capture screenshots (sequential, main agent — dev server is shared state).
+4. Combine results into a single data file and open a PR with the GitHub CLI.
 
-Look in this repository for the section component I most recently worked on. If multiple are plausible, list them and ask me to pick. For the chosen section, gather:
+# 1. Identify the section(s) — light scan only
 
-1. **Reference layout** — the source file of the section component (TSX/JSX/Vue/Astro/Svelte). Include the prop type and the JSX. Trim wrappers and imports that aren't part of the section itself; keep the result self-contained and readable.
-2. **Schema** — the CMS field definitions. Search likely locations:
-   - Payload: `payload.config.ts`, `collections/`, `blocks/`, `fields/`
-   - Sanity: `sanity.config.*`, `schemas/`, `schemaTypes/`
-   - Storyblok: `storyblok/components/`
-   - Contentful / Strapi / Directus: their respective config dirs
-   Convert the schema into the simple JSON shape below. Preserve nested groups exactly. Drop CMS-specific options that don't have an analogue (icons, custom validators, conditional logic) — they belong in the original CMS, not in the gallery's reference schema.
-3. **Screenshot** — look in `docs/`, `screenshots/`, `public/` for an existing one. If none exists, start the dev server, open the page using this section, take a screenshot at ~1600×900 (PNG or SVG). Save it to a temp path you'll reference below.
-4. **Metadata** — propose:
-   - `name` (Title Case)
-   - `description` — one or two sentences
-   - `tags` — free-form, lowercase
-   - `categories` — e.g. `landing`, `pricing`, `blog`, `product`
-   - `effects` — animations / scroll behaviours / interactive bits
-   - `cmsTarget` — `payload` | `sanity` | `storyblok` | `contentful` | `strapi` | `directus` | `wordpress`
+Without reading whole files into your own context, locate candidate section components and their matching schema. For each, write down:
 
-# 2. JSON shape
+- a short `name` (Title Case) and a project-relative `componentPath`
+- the matching `schemaPath` if you can spot it. Search hints:
+  - Payload: `payload.config.ts`, `collections/`, `blocks/`, `fields/`
+  - Sanity: `sanity.config.*`, `schemas/`, `schemaTypes/`
+  - Storyblok: `storyblok/components/`
+  - Contentful / Strapi / Directus: their respective config dirs
+- the `cmsTarget` (`payload` | `sanity` | `storyblok` | `contentful` | `strapi` | `directus` | `wordpress`)
 
-Each section is an object like this. The data file is a JSON **array** of one or more such objects.
+Show me the list and confirm before going further. Also confirm the `<project-slug>` (lowercase, dashes, e.g. `acme-store`) — used for the filename and screenshot folder.
 
-```jsonc
-{
-  "name": "Hero Banner with Parallax",
-  "description": "Full-width hero with a parallax background and animated heading.",
-  "preview": "previews/2026-05-08_acme-store/hero-banner.png",
-  "tags": ["hero", "banner", "parallax"],
-  "categories": ["landing"],
-  "effects": ["parallax-scroll", "fade-in"],
-  "cmsTarget": "payload",
-  "layout": {
-    "language": "tsx",
-    "code": "...the cleaned section source..."
-  },
-  "schema": {
-    "fields": [
-      { "name": "title", "type": "string", "title": "Title", "required": true },
-      {
-        "name": "cta",
-        "type": "group",
-        "title": "Call to action",
-        "fields": [
-          { "name": "label", "type": "string" },
-          { "name": "href", "type": "url" }
-        ]
-      }
-    ]
-  }
-}
-```
+# 2. Extract each section's JSON — dispatch subagents in PARALLEL
 
-Field types you can use: `string`, `text`, `number`, `boolean`, `url`, `image`, `richText`, `reference`, `select` (+ `options: string[]`), `array` (+ `of: SchemaField[]`), `group` (+ `fields: SchemaField[]`), `object` (+ `fields: SchemaField[]`).
+**If exactly one section**: do the work inline (read the files, build the JSON object).
 
-Do **not** include `project` or `addedAt` in the JSON — those are derived from the filename.
+**If two or more sections**: dispatch one Task subagent per section in a single message (multiple Task calls in one assistant turn = parallel execution). Reasons:
+- Each subagent gets its own 200k context, so we don't blow up the main context with every project's source.
+- Subagents return only the small JSON object, not the source.
+- Total wall-clock time scales with the largest section, not the sum.
 
-# 3. Open the PR with the GitHub CLI
+## Subagent prompt template
 
-Run this from any directory. Replace `<project-slug>` with a short, lowercase, dash-separated slug for the project you took the section from (e.g. `acme-store`). Replace `<filename>` with a slug for each section's screenshot.
+Pass this verbatim to each subagent, with `{name}`, `{componentPath}`, `{schemaPath}`, `{cmsTarget}` filled in:
+
+> You are extracting a single CMS section into the easy-section JSON shape. Read the two files below and return ONLY the JSON object — no markdown, no commentary, no screenshot, no PR work. Anything else in your reply is wasted tokens.
+>
+> Section: **{name}**
+> Component: `{componentPath}`
+> Schema: `{schemaPath}`
+> Target CMS: `{cmsTarget}`
+>
+> Return an object matching exactly this shape:
+>
+> ```jsonc
+> {
+>   "name": "{name}",
+>   "description": "<one or two sentences you write>",
+>   "preview": "previews/<DATE>_<PROJECT>/<slug>.png",  // leave the placeholder; main will replace
+>   "tags": ["..."],          // free-form, lowercase
+>   "categories": ["..."],    // landing | pricing | blog | product | ...
+>   "effects": ["..."],       // animations / scroll behaviours
+>   "cmsTarget": "{cmsTarget}",
+>   "layout": {
+>     "language": "tsx",       // or jsx | vue | astro | svelte
+>     "code": "...the cleaned section source, no unrelated wrappers/imports..."
+>   },
+>   "schema": {
+>     "fields": [
+>       { "name": "title", "type": "string", "title": "Title", "required": true }
+>       // group fields nest under `fields`; arrays under `of`
+>     ]
+>   }
+> }
+> ```
+>
+> Field types you can use: `string`, `text`, `number`, `boolean`, `url`, `image`, `richText`, `reference`, `select` (+ `options: string[]`), `array` (+ `of: SchemaField[]`), `group` (+ `fields: SchemaField[]`), `object` (+ `fields: SchemaField[]`).
+>
+> Rules:
+> - Trim the layout to the section component itself; drop unrelated wrappers and imports.
+> - Preserve nested schema groups exactly.
+> - Drop CMS-specific options that don't translate (icons, custom validators, conditional logic).
+> - Do not paste API keys, internal URLs, real customer copy, or proprietary identifiers. Sanitize names if needed.
+> - Do not include `project` or `addedAt` — derived from the filename.
+> - Reply with the JSON object and nothing else.
+
+When all subagents return, you'll have a list of JSON objects.
+
+# 3. Screenshots — sequential, main agent only
+
+For each section, find an existing screenshot in `docs/`, `screenshots/`, or `public/`. If none exists, start the dev server, navigate to a page that uses the section, capture at ~1600×900, and save to a temp path. Do this one at a time — the dev server is shared state, can't be parallelized.
+
+Then, in each section JSON, replace the `previews/<DATE>_<PROJECT>/<slug>.png` placeholder with the real path.
+
+# 4. Open the PR with the GitHub CLI
 
 Prereqs: `gh auth status` must show you logged in. If it doesn't, run `gh auth login` and finish that first.
 
@@ -86,22 +108,15 @@ git fetch upstream
 git checkout -b "$BRANCH" upstream/main
 
 mkdir -p "public/previews/${DATE}_${PROJECT}"
-cp /path/to/screenshot.png "public/previews/${DATE}_${PROJECT}/<filename>.png"
+# Copy each captured screenshot into public/previews/${DATE}_${PROJECT}/
+# matching the filenames you put in each section's `preview` field.
+cp /path/to/<slug>.png "public/previews/${DATE}_${PROJECT}/<slug>.png"
 
-# Write the JSON file. It must be an ARRAY of section objects.
+# Write the JSON file. It must be an ARRAY of section objects — one entry
+# per section the subagents returned, in the order you confirmed above.
 cat > "data-source/${DATE}_${PROJECT}_sections.json" <<'JSON'
 [
-  {
-    "name": "...",
-    "description": "...",
-    "preview": "previews/<DATE>_<PROJECT>/<filename>.png",
-    "tags": ["..."],
-    "categories": ["..."],
-    "effects": ["..."],
-    "cmsTarget": "payload",
-    "layout": { "language": "tsx", "code": "..." },
-    "schema": { "fields": [ /* ... */ ] }
-  }
+  /* paste the combined JSON objects from the subagents here */
 ]
 JSON
 
@@ -122,13 +137,13 @@ gh pr create \
   --body "Adds $PROJECT sections to the gallery."
 ```
 
-# 4. Hard rules
+# 5. Hard rules
 
 - Filename **must** match `^\d{4}-\d{2}-\d{2}_[a-z0-9-]+_sections\.json$`.
 - The data file is a JSON **array** at the top level — even for a single section.
 - The `preview` path is relative to `public/` (no leading slash).
-- Do not paste API keys, internal URLs, real customer copy, or anything proprietary into `layout.code` or the schema. Sanitize identifiers if needed.
+- Never paste API keys, internal URLs, real customer copy, or anything proprietary into `layout.code` or the schema. Sanitize identifiers if needed.
 - If `pnpm build` fails, **fix the JSON before pushing** — don't push a broken file and let CI catch it.
-- One file per project per upload. If you have several sections from the same project, put them all in the same array.
+- One file per project per upload. Several sections from the same project? One file, multiple objects in the array.
 
 When the PR is open, reply with the PR URL.
