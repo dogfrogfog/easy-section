@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Feature grid preview">
+  <rect width="1600" height="900" fill="#fafafa"/>
+  <g font-family="ui-sans-serif, system-ui" fill="#0f172a">
+    <text x="120" y="160" font-size="48" font-weight="700">Why teams choose us</text>
+    <text x="120" y="210" font-size="22" fill="#475569" font-weight="400">Three reasons that compound over time.</text>
+  </g>
+  <g>
+    <g transform="translate(120 280)">
+      <rect width="420" height="440" rx="20" fill="#fff" stroke="#e2e8f0"/>
+      <circle cx="60" cy="80" r="32" fill="#bdff00"/>
+      <text x="60" y="92" font-family="ui-sans-serif, system-ui" font-size="34" text-anchor="middle">⚡</text>
+      <text x="40" y="180" font-family="ui-sans-serif, system-ui" font-size="26" font-weight="600" fill="#0f172a">Fast estimates</text>
+      <text x="40" y="220" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">Reuse what works.</text>
+      <text x="40" y="246" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">Estimate based on real,</text>
+      <text x="40" y="272" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">shipped sections.</text>
+    </g>
+    <g transform="translate(590 280)">
+      <rect width="420" height="440" rx="20" fill="#fff" stroke="#e2e8f0"/>
+      <circle cx="60" cy="80" r="32" fill="#bdff00"/>
+      <text x="60" y="92" font-family="ui-sans-serif, system-ui" font-size="34" text-anchor="middle">✦</text>
+      <text x="40" y="180" font-family="ui-sans-serif, system-ui" font-size="26" font-weight="600" fill="#0f172a">Better defaults</text>
+      <text x="40" y="220" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">Patterns we&apos;ve already</text>
+      <text x="40" y="246" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">solved, written down once.</text>
+    </g>
+    <g transform="translate(1060 280)">
+      <rect width="420" height="440" rx="20" fill="#fff" stroke="#e2e8f0"/>
+      <circle cx="60" cy="80" r="32" fill="#bdff00"/>
+      <text x="60" y="92" font-family="ui-sans-serif, system-ui" font-size="34" text-anchor="middle">↻</text>
+      <text x="40" y="180" font-family="ui-sans-serif, system-ui" font-size="26" font-weight="600" fill="#0f172a">Decide once</text>
+      <text x="40" y="220" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">Spot a pattern in the data,</text>
+      <text x="40" y="246" font-family="ui-sans-serif, system-ui" font-size="18" fill="#475569">codify it, never re-decide.</text>
+    </g>
+  </g>
+</svg>

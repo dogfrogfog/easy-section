@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Hero Banner with Parallax",
+    "description": "Full-width hero with a parallax background image, a gradient overlay, and an animated heading. Suitable as a landing-page opener.",
+    "preview": "previews/2026-05-08_example-store/hero-banner.svg",
+    "tags": ["hero", "banner", "parallax"],
+    "categories": ["landing"],
+    "effects": ["parallax-scroll", "fade-in", "gradient-overlay"],
+    "cmsTarget": "payload",
+    "layout": {
+      "language": "tsx",
+      "code": "import Image from 'next/image';\nimport Link from 'next/link';\n\ntype Cta = { label: string; href: string };\n\ntype HeroBannerProps = {\n  title: string;\n  subtitle?: string;\n  image: { src: string; alt: string };\n  cta?: Cta;\n};\n\nexport function HeroBanner({ title, subtitle, image, cta }: HeroBannerProps) {\n  return (\n    <section className=\"relative h-[80vh] min-h-[480px] overflow-hidden\">\n      <div className=\"absolute inset-0 will-change-transform\" data-parallax>\n        <Image\n          src={image.src}\n          alt={image.alt}\n          fill\n          priority\n          sizes=\"100vw\"\n          className=\"object-cover\"\n        />\n        <div className=\"absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70\" />\n      </div>\n      <div className=\"relative z-10 container mx-auto h-full flex flex-col justify-end pb-16 px-6\">\n        <h1 className=\"max-w-2xl text-balance text-5xl md:text-6xl font-bold text-white animate-in fade-in slide-in-from-bottom-4 duration-700\">\n          {title}\n        </h1>\n        {subtitle && (\n          <p className=\"mt-4 max-w-xl text-lg text-white/85\">{subtitle}</p>\n        )}\n        {cta && (\n          <Link\n            href={cta.href}\n            className=\"mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-primary px-6 py-3 font-medium text-primary-foreground hover:bg-primary/90\"\n          >\n            {cta.label}\n          </Link>\n        )}\n      </div>\n    </section>\n  );\n}\n"
+    },
+    "schema": {
+      "fields": [
+        { "name": "title", "type": "string", "title": "Title", "required": true },
+        { "name": "subtitle", "type": "text", "title": "Subtitle" },
+        { "name": "image", "type": "image", "title": "Background image", "required": true },
+        {
+          "name": "cta",
+          "type": "group",
+          "title": "Call to action",
+          "fields": [
+            { "name": "label", "type": "string" },
+            { "name": "href", "type": "url" }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "Three-Column Feature Grid",
+    "description": "A trio of feature cards with icons, headings, and short copy. Designed to sit below the hero and summarise key benefits.",
+    "preview": "previews/2026-05-08_example-store/feature-grid.svg",
+    "tags": ["features", "grid", "cards"],
+    "categories": ["landing", "marketing"],
+    "effects": ["fade-in-stagger"],
+    "cmsTarget": "sanity",
+    "layout": {
+      "language": "tsx",
+      "code": "type Feature = { icon: string; title: string; body: string };\n\nexport function FeatureGrid({ heading, features }: { heading?: string; features: Feature[] }) {\n  return (\n    <section className=\"container mx-auto px-6 py-20\">\n      {heading && (\n        <h2 className=\"text-3xl md:text-4xl font-semibold tracking-tight mb-10\">\n          {heading}\n        </h2>\n      )}\n      <div className=\"grid gap-8 sm:grid-cols-2 lg:grid-cols-3\">\n        {features.map((f, i) => (\n          <article\n            key={f.title}\n            className=\"rounded-xl border border-border p-6 animate-in fade-in slide-in-from-bottom-2\"\n            style={{ animationDelay: `${i * 80}ms` }}\n          >\n            <div className=\"text-primary text-2xl mb-4\" aria-hidden>\n              {f.icon}\n            </div>\n            <h3 className=\"font-semibold text-lg mb-2\">{f.title}</h3>\n            <p className=\"text-muted-foreground text-sm leading-relaxed\">{f.body}</p>\n          </article>\n        ))}\n      </div>\n    </section>\n  );\n}\n"
+    },
+    "schema": {
+      "fields": [
+        { "name": "heading", "type": "string", "title": "Section heading" },
+        {
+          "name": "features",
+          "type": "array",
+          "title": "Features",
+          "of": [
+            {
+              "name": "feature",
+              "type": "object",
+              "fields": [
+                { "name": "icon", "type": "string", "title": "Icon (emoji or name)" },
+                { "name": "title", "type": "string", "required": true },
+                { "name": "body", "type": "text", "required": true }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "Pricing Table",
+    "description": "Three-tier pricing with a recommended plan, monthly/annual toggle, and per-plan feature lists.",
+    "preview": "previews/2026-05-08_example-store/pricing.svg",
+    "tags": ["pricing", "table", "plans"],
+    "categories": ["pricing"],
+    "effects": ["highlight-recommended"],
+    "cmsTarget": "storyblok",
+    "layout": {
+      "language": "tsx",
+      "code": "type Plan = {\n  name: string;\n  monthly: number;\n  annual: number;\n  recommended?: boolean;\n  features: string[];\n  cta: { label: string; href: string };\n};\n\nexport function PricingTable({ plans }: { plans: Plan[] }) {\n  return (\n    <section className=\"container mx-auto px-6 py-20\">\n      <div className=\"grid gap-6 lg:grid-cols-3\">\n        {plans.map((p) => (\n          <div\n            key={p.name}\n            className={\n              'rounded-2xl border p-8 ' +\n              (p.recommended ? 'border-primary shadow-lg' : 'border-border')\n            }\n          >\n            {p.recommended && (\n              <div className=\"text-xs font-medium text-primary mb-2\">Recommended</div>\n            )}\n            <h3 className=\"text-2xl font-semibold\">{p.name}</h3>\n            <p className=\"mt-4 text-4xl font-bold\">${p.monthly}<span className=\"text-base font-normal text-muted-foreground\">/mo</span></p>\n            <ul className=\"mt-6 space-y-2 text-sm\">\n              {p.features.map((f) => (\n                <li key={f}>· {f}</li>\n              ))}\n            </ul>\n            <a\n              href={p.cta.href}\n              className=\"mt-8 inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground\"\n            >\n              {p.cta.label}\n            </a>\n          </div>\n        ))}\n      </div>\n    </section>\n  );\n}\n"
+    },
+    "schema": {
+      "fields": [
+        {
+          "name": "plans",
+          "type": "array",
+          "title": "Plans",
+          "of": [
+            {
+              "name": "plan",
+              "type": "object",
+              "fields": [
+                { "name": "name", "type": "string", "required": true },
+                { "name": "monthly", "type": "number", "required": true },
+                { "name": "annual", "type": "number", "required": true },
+                { "name": "recommended", "type": "boolean" },
+                {
+                  "name": "features",
+                  "type": "array",
+                  "of": [{ "name": "feature", "type": "string" }]
+                },
+                {
+                  "name": "cta",
+                  "type": "group",
+                  "fields": [
+                    { "name": "label", "type": "string" },
+                    { "name": "href", "type": "url" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

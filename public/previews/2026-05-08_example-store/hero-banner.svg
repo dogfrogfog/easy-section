@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Hero banner preview">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="overlay" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.7"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="0%" r="60%">
+      <stop offset="0%" stop-color="#bdff00" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#bdff00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <g opacity="0.35" stroke="#94a3b8" stroke-width="1">
+    <path d="M0 600 Q400 540 800 600 T1600 600"/>
+    <path d="M0 680 Q400 620 800 680 T1600 680"/>
+    <path d="M0 760 Q400 700 800 760 T1600 760"/>
+  </g>
+  <rect width="1600" height="900" fill="url(#overlay)"/>
+  <g font-family="ui-sans-serif, system-ui" fill="#f8fafc">
+    <text x="120" y="640" font-size="72" font-weight="700">Build CMS sections faster.</text>
+    <text x="120" y="700" font-size="28" fill="#cbd5e1" font-weight="400">Find a section that fits, copy its layout and schema, and ship.</text>
+    <rect x="120" y="730" rx="32" ry="32" width="240" height="64" fill="#bdff00"/>
+    <text x="240" y="772" font-size="22" font-weight="600" fill="#0f172a" text-anchor="middle">Browse gallery</text>
+  </g>
+</svg>

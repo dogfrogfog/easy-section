@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Pricing table preview">
+  <rect width="1600" height="900" fill="#0b1220"/>
+  <g font-family="ui-sans-serif, system-ui" fill="#f8fafc" text-anchor="middle">
+    <text x="800" y="140" font-size="46" font-weight="700">Simple, honest pricing</text>
+    <text x="800" y="184" font-size="20" fill="#94a3b8">Pick a plan. Switch anytime.</text>
+  </g>
+  <g>
+    <g transform="translate(160 240)">
+      <rect width="380" height="540" rx="20" fill="#0f172a" stroke="#1e293b"/>
+      <text x="40" y="70" font-family="ui-sans-serif, system-ui" font-size="22" font-weight="600" fill="#e2e8f0">Starter</text>
+      <text x="40" y="160" font-family="ui-sans-serif, system-ui" font-size="56" font-weight="700" fill="#f8fafc">$19</text>
+      <text x="120" y="160" font-family="ui-sans-serif, system-ui" font-size="18" fill="#94a3b8">/mo</text>
+      <line x1="40" y1="200" x2="340" y2="200" stroke="#1e293b"/>
+      <g font-family="ui-sans-serif, system-ui" font-size="16" fill="#cbd5e1">
+        <text x="40" y="240">· 1 project</text>
+        <text x="40" y="270">· 100 sections</text>
+        <text x="40" y="300">· Email support</text>
+      </g>
+      <rect x="40" y="450" width="300" height="48" rx="8" fill="#1e293b"/>
+      <text x="190" y="480" font-family="ui-sans-serif, system-ui" font-size="16" font-weight="500" fill="#f8fafc" text-anchor="middle">Choose Starter</text>
+    </g>
+    <g transform="translate(610 220)">
+      <rect width="380" height="580" rx="20" fill="#0f172a" stroke="#bdff00" stroke-width="2"/>
+      <rect x="40" y="-14" width="120" height="28" rx="14" fill="#bdff00"/>
+      <text x="100" y="6" font-family="ui-sans-serif, system-ui" font-size="13" font-weight="600" fill="#0b1220" text-anchor="middle">Recommended</text>
+      <text x="40" y="80" font-family="ui-sans-serif, system-ui" font-size="22" font-weight="600" fill="#e2e8f0">Pro</text>
+      <text x="40" y="170" font-family="ui-sans-serif, system-ui" font-size="56" font-weight="700" fill="#f8fafc">$49</text>
+      <text x="120" y="170" font-family="ui-sans-serif, system-ui" font-size="18" fill="#94a3b8">/mo</text>
+      <line x1="40" y1="210" x2="340" y2="210" stroke="#1e293b"/>
+      <g font-family="ui-sans-serif, system-ui" font-size="16" fill="#cbd5e1">
+        <text x="40" y="250">· Unlimited projects</text>
+        <text x="40" y="280">· Unlimited sections</text>
+        <text x="40" y="310">· Priority support</text>
+        <text x="40" y="340">· Custom domain</text>
+      </g>
+      <rect x="40" y="490" width="300" height="48" rx="8" fill="#bdff00"/>
+      <text x="190" y="520" font-family="ui-sans-serif, system-ui" font-size="16" font-weight="600" fill="#0b1220" text-anchor="middle">Choose Pro</text>
+    </g>
+    <g transform="translate(1060 240)">
+      <rect width="380" height="540" rx="20" fill="#0f172a" stroke="#1e293b"/>
+      <text x="40" y="70" font-family="ui-sans-serif, system-ui" font-size="22" font-weight="600" fill="#e2e8f0">Team</text>
+      <text x="40" y="160" font-family="ui-sans-serif, system-ui" font-size="56" font-weight="700" fill="#f8fafc">$99</text>
+      <text x="120" y="160" font-family="ui-sans-serif, system-ui" font-size="18" fill="#94a3b8">/mo</text>
+      <line x1="40" y1="200" x2="340" y2="200" stroke="#1e293b"/>
+      <g font-family="ui-sans-serif, system-ui" font-size="16" fill="#cbd5e1">
+        <text x="40" y="240">· Everything in Pro</text>
+        <text x="40" y="270">· 10 seats</text>
+        <text x="40" y="300">· SSO &amp; audit log</text>
+        <text x="40" y="330">· Dedicated CSM</text>
+      </g>
+      <rect x="40" y="450" width="300" height="48" rx="8" fill="#1e293b"/>
+      <text x="190" y="480" font-family="ui-sans-serif, system-ui" font-size="16" font-weight="500" fill="#f8fafc" text-anchor="middle">Contact sales</text>
+    </g>
+  </g>
+</svg>
