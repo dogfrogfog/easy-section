@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function GoalsPage() {
   return (
-    <div className="container mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
+    <div className="mx-auto max-w-3xl px-6 sm:px-10 py-16 sm:py-24">
       <header className="mb-10">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
           Goals

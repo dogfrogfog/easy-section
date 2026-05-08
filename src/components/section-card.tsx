@@ -36,7 +36,7 @@ function CardShell({
       onClick={onClick}
       aria-label={ariaLabel}
       className={cn(
-        "group text-left w-full overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] transition-all hover:border-[var(--primary)]/60 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
+        "group text-left w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)] transition-all hover:border-[var(--primary)]/60 hover:shadow-[0_8px_30px_-10px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
         className,
       )}
     >
@@ -101,16 +101,16 @@ function GridCard({
   return (
     <CardShell onClick={() => onOpen(section.slug)} ariaLabel={`Open ${section.name}`}>
       <Preview src={section.preview} alt={section.name} className="aspect-video" />
-      <div className="p-4 space-y-2">
+      <div className="p-5 space-y-2.5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold leading-tight">{section.name}</h3>
+          <h3 className="font-semibold text-lg leading-tight">{section.name}</h3>
         </div>
-        <p className="text-sm text-[var(--muted-foreground)] line-clamp-2">
+        <p className="text-base text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
           {section.description}
         </p>
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between pt-1.5">
           <TagList tags={section.tags} max={3} />
-          <span className="text-xs text-[var(--muted-foreground)] shrink-0 ml-2">
+          <span className="text-sm text-[var(--muted-foreground)] shrink-0 ml-2">
             {section.project}
           </span>
         </div>
@@ -137,17 +137,17 @@ function ListCard({
         alt={section.name}
         className="sm:w-72 sm:shrink-0 aspect-video sm:aspect-[4/3]"
       />
-      <div className="flex-1 p-4 sm:p-5 flex flex-col gap-2 min-w-0">
+      <div className="flex-1 p-5 sm:p-6 flex flex-col gap-2.5 min-w-0">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-semibold text-lg leading-tight truncate">
+            <h3 className="font-semibold text-xl leading-tight truncate">
               {section.name}
             </h3>
-            <div className="text-xs text-[var(--muted-foreground)] mt-0.5 flex items-center gap-2">
+            <div className="text-sm text-[var(--muted-foreground)] mt-1 flex items-center gap-2">
               <span>{section.project}</span>
               <span>·</span>
               <span className="inline-flex items-center gap-1">
-                <Calendar className="h-3 w-3" /> {section.addedAt}
+                <Calendar className="h-3.5 w-3.5" /> {section.addedAt}
               </span>
               {section.cmsTarget && (
                 <>
@@ -158,10 +158,10 @@ function ListCard({
             </div>
           </div>
         </div>
-        <p className="text-sm text-[var(--muted-foreground)] line-clamp-2">
+        <p className="text-base text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">
           {section.description}
         </p>
-        <div className="mt-auto pt-2">
+        <div className="mt-auto pt-2.5">
           <TagList tags={[...section.tags, ...section.effects]} max={6} />
         </div>
       </div>
@@ -183,15 +183,15 @@ function LargeCard({
         alt={section.name}
         className="aspect-[16/8] sm:aspect-[16/7]"
       />
-      <div className="p-5 sm:p-6 space-y-3">
+      <div className="p-6 sm:p-7 space-y-3">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 className="font-semibold text-xl leading-tight">{section.name}</h3>
-          <span className="text-xs text-[var(--muted-foreground)]">
+          <h3 className="font-semibold text-2xl leading-tight">{section.name}</h3>
+          <span className="text-sm text-[var(--muted-foreground)]">
             {section.project} · {section.addedAt}
             {section.cmsTarget ? ` · ${section.cmsTarget}` : ""}
           </span>
         </div>
-        <p className="text-sm text-[var(--muted-foreground)] max-w-3xl">
+        <p className="text-base text-[var(--muted-foreground)] max-w-3xl leading-relaxed">
           {section.description}
         </p>
         <TagList tags={[...section.tags, ...section.effects]} max={10} />

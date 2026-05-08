@@ -128,7 +128,7 @@ export function Gallery({ sections, facets }: GalleryProps) {
   }
 
   return (
-    <section id="gallery" className="container mx-auto px-4 sm:px-6 py-8 space-y-6">
+    <section id="gallery" className="mx-auto px-6 sm:px-10 py-10 sm:py-14 space-y-7 max-w-7xl">
       <div className="space-y-4">
         <SearchBar value={q} onChange={handleSearchChange} />
         <div className="flex flex-wrap items-center justify-between gap-3">

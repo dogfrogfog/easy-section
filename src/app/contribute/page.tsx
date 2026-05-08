@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function ContributePage() {
   return (
-    <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16 space-y-10">
+    <div className="mx-auto max-w-4xl px-6 sm:px-10 py-16 sm:py-24 space-y-10">
       <header>
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
           Contribute a section

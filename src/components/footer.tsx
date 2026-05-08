@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-[var(--border)] py-6">
-      <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 text-sm text-[var(--muted-foreground)]">
+      <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 px-6 sm:px-10 text-base text-[var(--muted-foreground)]">
         <p>Internal CMS section gallery.</p>
         <a
           href="https://focusreactive.com"
