@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CopyButton } from "@/components/copy-button";
 import { SchemaTree } from "@/components/schema-tree";
-import { buildPrompt, SUPPORTED_CMS } from "@/lib/prompt";
+import { buildPrompt, SUPPORTED_CMS, type SupportedCms } from "@/lib/prompt";
 import type { Section } from "@/lib/types";
 
 interface SectionDetailProps {
@@ -41,9 +41,12 @@ export function SectionDetail({ section, onClose }: SectionDetailProps) {
 }
 
 function SectionDetailInner({ section }: { section: Section }) {
-  const [cms, setCms] = React.useState<string>(
-    section.cmsTarget ?? SUPPORTED_CMS[0],
-  );
+  const [cms, setCms] = React.useState<SupportedCms>(() => {
+    const initial = section.cmsTarget;
+    return (SUPPORTED_CMS as readonly string[]).includes(initial ?? "")
+      ? (initial as SupportedCms)
+      : SUPPORTED_CMS[0];
+  });
   const prompt = React.useMemo(
     () => buildPrompt(section, { cms }),
     [section, cms],
@@ -196,8 +199,8 @@ function CmsPicker({
   value,
   onChange,
 }: {
-  value: string;
-  onChange: (v: string) => void;
+  value: SupportedCms;
+  onChange: (v: SupportedCms) => void;
 }) {
   return (
     <div className="flex items-center gap-2">
